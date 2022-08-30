@@ -49,6 +49,26 @@ TITLES
 
 ### Как запустить проект:
 
+На macOS или Linux запустите программу Терминал. 
+Если у вас Windows — запускайте [Git Bash](https://gitforwindows.org/)
+
+Установите интерпретатор Python 3.7
+
+Для Windows:
+www.python.org/downloads/#
+
+Для MacOS:
+
+```
+brew install python@3.7
+```
+
+Для Linux (Ubuntu):
+
+```
+sudo apt-get install python3.7
+```
+
 Клонировать репозиторий и перейти в него в командной строке:
 
 
@@ -70,7 +90,7 @@ cd infra_sp2
 
 ```
 
-infra
+cd infra
 
 ```
 
@@ -89,7 +109,38 @@ DB_NAME=postgres # имя базы данных
 POSTGRES_USER=postgres # логин для подключения к базе данных
 POSTGRES_PASSWORD=postgres # пароль для подключения к БД (установите свой)
 DB_HOST=db # название сервиса (контейнера)
-DB_PORT=5432 # порт для подключения к БД 
+DB_PORT=5432 # порт для подключения к БД
+SECRET_KEY=key 
+
+```
+
+Проверить, установлен ли Docker:
+
+```
+
+docker -v
+
+```
+
+Если Docker не установлен:
+
+Скачать [Docker Desktop](https://www.docker.com/products/docker-desktop/). 
+
+Для Linux:
+
+```
+
+sudo apt install curl
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+
+```
+
+Установить Docker, а вместе с ним Docker Compose:
+
+```
+
+sudo apt install docker-ce docker-compose -y 
 
 ```
 
@@ -127,6 +178,118 @@ docker-compose exec web python manage.py loaddata fixtures.json
 
 http://127.0.0.1:8000/redoc
 
+### Примеры запросов:
+
+Получить список всех категорий
+
+Права доступа: Доступно без токена
+
+**GET**
+/http://localhost/api/v1/categories/
+
+*Ответ*
+**200**
+```
+[
+  {
+    "count": 0,
+    "next": "string",
+    "previous": "string",
+    "results": [
+      {
+        "name": "string",
+        "slug": "string"
+      }
+    ]
+  }
+]
+```
+
+Создать категорию.
+
+Права доступа: Администратор.
+
+Поле slug каждой категории должно быть уникальным.
+
+**POST**
+http://localhost/api/v1/categories/
+
+*Передаваемые данные*
+
+```
+{
+  "name": "string",
+  "slug": "string"
+}
+```
+
+*Ответ*
+**201**
+```
+{
+  "name": "string",
+  "slug": "string"
+}
+```
+
+*Ответ*
+**400**
+```
+{
+  "field_name": [
+    "string"
+  ]
+}
+```
+Удалить категорию.
+
+Права доступа: Администратор.
+
+**DELETE**
+http://localhost/api/v1/categories/{slug}/
+
+Обновить информацию о произведении
+
+Права доступа: Администратор
+
+**PATCH**
+http://localhost/api/v1/titles/{titles_id}/
+
+*Передаваемые данные*
+
+```
+{
+  "name": "string",
+  "year": 0,
+  "description": "string",
+  "genre": [
+    "string"
+  ],
+  "category": "string"
+}
+```
+
+*Ответ*
+**200**
+```
+{
+  "id": 0,
+  "name": "string",
+  "year": 0,
+  "rating": 0,
+  "description": "string",
+  "genre": [
+    {
+      "name": "string",
+      "slug": "string"
+    }
+  ],
+  "category": {
+    "name": "string",
+    "slug": "string"
+  }
+}
+```
 
 ### Технологии
 
